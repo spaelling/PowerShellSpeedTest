@@ -55,3 +55,43 @@ function Test-ListIntegersFor {
     }
     $Time / $Iterations
 }
+
+function Test-AddToArrayPlusEqual {
+    [CmdletBinding()]
+    param (
+        $Count,
+        $Iterations = 25
+    )
+    Write-Verbose "Running $Iterations iterations of $($MyInvocation.InvocationName)"
+
+    $Time = 0
+    for ($i = 0; $i -lt $Iterations; $i++) {
+        $Time += Measure-Command -Expression {
+            $_List = @()            
+            for ($j = 0; $j -lt $Count; $j++) {
+                $_List += $j
+            }
+        } | Select-Object -ExpandProperty TotalMilliseconds        
+    }
+    $Time / $Iterations
+}
+
+function Test-AddToArrayAdd {
+    [CmdletBinding()]
+    param (
+        $Count,
+        $Iterations = 25
+    )
+    Write-Verbose "Running $Iterations iterations of $($MyInvocation.InvocationName)"
+
+    $Time = 0
+    for ($i = 0; $i -lt $Iterations; $i++) {
+        $Time += Measure-Command -Expression {
+            $_List = New-Object 'System.Collections.ArrayList'
+            for ($j = 0; $j -lt $Count; $j++) {
+                $_List.Add($j)
+            }
+        } | Select-Object -ExpandProperty TotalMilliseconds        
+    }
+    $Time / $Iterations
+}
